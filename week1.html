@@ -4,7 +4,269 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Malaria Data Analysis Course</title>
-    <link rel="stylesheet" href="styles.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --accent-color: #3498db;
+            --highlight-color: #e74c3c;
+            --background-color: #f8f9fa;
+            --sidebar-bg: #2c3e50;
+            --text-color: #333;
+            --light-text: #f8f9fa;
+            --code-bg: #f1f2f6;
+            --border-color: #ddd;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background-color: var(--background-color);
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            transition: margin-right 0.3s ease;
+        }
+
+        h1, h2, h3, h4 {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-color);
+            border-bottom: 2px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        h2 {
+            font-size: 1.8rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--accent-color);
+            padding-left: 10px;
+        }
+
+        h3 {
+            font-size: 1.4rem;
+            margin-top: 1.5rem;
+            margin-bottom: 0.8rem;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+            background-color: var(--code-bg);
+            padding: 2px 5px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        pre code {
+            background-color: transparent;
+            padding: 0;
+        }
+
+        .r-code {
+            background-color: #f5f5f5;
+            color: #24292e;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow-x: auto;
+            border-left: 4px solid var(--accent-color);
+        }
+
+        .explanation {
+            background-color: #e8f4f8;
+            padding: 10px 15px;
+            border-radius: 5px;
+            margin: 15px 0;
+            border-left: 4px solid #2980b9;
+        }
+
+        .explanation h4 {
+            margin-top: 0;
+            color: #2980b9;
+        }
+
+        .table-container {
+            overflow-x: auto;
+            margin: 20px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+        }
+
+        th {
+            background-color: var(--accent-color);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 20px;
+            right: 0;
+            width: 300px;
+            height: calc(100vh - 40px);
+            background-color: var(--sidebar-bg);
+            color: var(--light-text);
+            padding: 20px;
+            transform: translateX(100%);
+            transition: transform 0.3s ease;
+            overflow-y: auto;
+            box-shadow: -2px 0 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            border-radius: 5px 0 0 5px;
+        }
+
+        .sidebar.active {
+            transform: translateX(0);
+        }
+
+        .sidebar-toggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            z-index: 1001;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .sidebar-toggle:hover {
+            background-color: #2980b9;
+        }
+
+        .sidebar h3 {
+            color: white;
+            margin-top: 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+            padding-bottom: 10px;
+        }
+
+        .sidebar ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar a {
+            color: white;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .sidebar .sub-menu {
+            padding-left: 20px;
+            display: none;
+        }
+
+        .sidebar .menu-item.active .sub-menu {
+            display: block;
+        }
+
+        .sidebar .menu-item > a {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .sidebar .menu-item > a::after {
+            content: '+';
+            font-size: 1.2em;
+        }
+
+        .sidebar .menu-item.active > a::after {
+            content: '-';
+        }
+
+        .emoji {
+            font-style: normal;
+            margin-right: 8px;
+        }
+
+        .highlight {
+            background-color: #ffffcc;
+            padding: 2px;
+        }
+
+        hr {
+            border: 0;
+            height: 1px;
+            background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+            margin: 2rem 0;
+        }
+
+        .exercise-section {
+            background-color: #e8f8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #27ae60;
+        }
+
+        .solution-section {
+            background-color: #f8e8e8;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 20px 0;
+            border-left: 4px solid #e74c3c;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
 </head>
 <body>
     <button class="sidebar-toggle" id="sidebar-toggle">Menu</button>
@@ -456,214 +718,451 @@ write_xlsx(malaria_data, "cleaned_malaria_data.xlsx")
             
             <h3>💡 What's Next?</h3>
             <p>✔ Try these exercises in RStudio<br>
-            ✔ If you have questions, ask for hints!<br>
-            ✔ Get ready for <strong>Week 2: Data Cleaning & Visualization!</strong> 🚀</p>
+            ✔ Complete the bonus challenge if you have time<br>
+            ✔ Get ready for Week 2: Data cleaning and manipulation!</p>
         </div>
         
         <hr>
         
-        <h1 id="solutions">📌 Week 1: Solution scripts – Introduction to R & RStudio for Malaria Data Analysis</h1>
-        <p>Here are the <strong>solutions</strong> for the Week 1 exercises:</p>
+        <h1 id="solutions">📌 Week 1: Solutions – Introduction to R & RStudio for Malaria Data Analysis</h1>
+        
+        <p>Here are the complete solutions to all Week 1 exercises. Try the exercises yourself first before looking at these solutions!</p>
         
         <hr>
         
         <div class="solution-section">
-            <h2 id="sol-syntax">1️⃣ Basic R Syntax and Operations</h2>
+            <h2 id="sol-syntax">1️⃣ Solutions: Basic R Syntax and Operations</h2>
             
-            <h3>Exercise 1.1: Assign Values</h3>
+            <h3>Solution 1.1: Assign Values</h3>
             <div class="r-code">
                 <code>
-# Assigning values to variables<br>
+# Create variables for malaria analysis<br>
+total_cases <- 500        # Total malaria cases<br>
+fatality_rate <- 3.5      # Fatality rate in percentage<br>
+region <- "North"         # Name of the region<br>
+outbreak <- TRUE          # Logical value indicating outbreak status
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ Each variable is assigned using the <code><-</code> operator<br>
+                ✔ <code>total_cases</code> and <code>fatality_rate</code> are numeric values<br>
+                ✔ <code>region</code> is a character string (enclosed in quotes)<br>
+                ✔ <code>outbreak</code> is a logical value (TRUE/FALSE)</p>
+            </div>
+            
+            <h3>Solution 1.2: Check Data Types</h3>
+            <div class="r-code">
+                <code>
+# Check data types of each variable<br>
+class(total_cases)     # Output: "numeric"<br>
+class(fatality_rate)   # Output: "numeric"<br>
+class(region)          # Output: "character"<br>
+class(outbreak)        # Output: "logical"<br><br>
+# Alternative: Check multiple at once<br>
+sapply(list(total_cases, fatality_rate, region, outbreak), class)
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>class()</code> returns the data type of each variable<br>
+                ✔ <code>sapply()</code> applies the <code>class()</code> function to multiple variables at once<br>
+                ✔ This helps verify that variables are stored correctly</p>
+            </div>
+            
+            <h3>Solution 1.3: Perform Calculations</h3>
+            <div class="r-code">
+                <code>
+# Calculate epidemiological metrics<br>
+fatalities <- total_cases * (fatality_rate / 100)<br>
+recovered <- total_cases - fatalities<br><br>
+# Display results<br>
+cat("Total Cases:", total_cases, "\n")<br>
+cat("Fatalities:", fatalities, "\n")<br>
+cat("Recovered:", recovered, "\n")<br>
+cat("Fatality Rate:", fatality_rate, "%\n")
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>fatalities = total_cases × (fatality_rate / 100)</code> converts percentage to actual count<br>
+                ✔ <code>recovered = total_cases - fatalities</code> calculates survivors<br>
+                ✔ <code>cat()</code> function displays formatted output with labels</p>
+            </div>
+        </div>
+        
+        <div class="solution-section">
+            <h2 id="sol-markdown">2️⃣ Solutions: Using R Markdown</h2>
+            
+            <h3>Solution 2.1: Install and Load R Markdown</h3>
+            <div class="r-code">
+                <code>
+# Install R Markdown package (run once)<br>
+install.packages("rmarkdown")<br><br>
+# Load R Markdown package<br>
+library(rmarkdown)<br><br>
+# Check if installation was successful<br>
+packageVersion("rmarkdown")
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>install.packages("rmarkdown")</code> downloads and installs the package<br>
+                ✔ <code>library(rmarkdown)</code> loads the package for use<br>
+                ✔ <code>packageVersion()</code> confirms successful installation</p>
+            </div>
+            
+            <h3>Solution 2.2: R Markdown Document Template</h3>
+            <div class="r-code">
+                <code>
+---<br>
+title: "Malaria Analysis Report"<br>
+author: "Your Name"<br>
+date: "`r Sys.Date()`"<br>
+output: html_document<br>
+---<br><br>
+# Introduction<br><br>
+This document presents an analysis of malaria cases in the North region.<br><br>
+## Data Summary<br><br>
+We analyzed malaria outbreak data with the following characteristics:<br><br>
+```{r}<br>
+# Load data variables<br>
 total_cases <- 500<br>
 fatality_rate <- 3.5<br>
 region <- "North"<br>
-outbreak <- TRUE
-                </code>
-            </div>
-            
-            <hr>
-            
-            <h3>Exercise 1.2: Check Data Types</h3>
-            <div class="r-code">
-                <code>
-# Check the data types of the variables<br>
-class(total_cases)     # numeric<br>
-class(fatality_rate)   # numeric<br>
-class(region)          # character<br>
-class(outbreak)        # logical
+outbreak <- TRUE<br><br>
+# Display summary<br>
+summary(total_cases)<br>
+```<br><br>
+The analysis covers **`r total_cases`** cases in the **`r region`** region with a fatality rate of **`r fatality_rate`%**.<br><br>
+## Key Findings<br><br>
+- Total cases: `r total_cases`<br>
+- Estimated fatalities: `r total_cases * (fatality_rate / 100)`<br>
+- Recovery rate: `r 100 - fatality_rate`%
                 </code>
             </div>
             
             <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- <code>class()</code> returns the data type of the variable.</p>
+                <h4>🔍 Explanation:</h4>
+                <p>✔ YAML header contains document metadata<br>
+                ✔ <code>`r Sys.Date()`</code> automatically inserts current date<br>
+                ✔ Code chunks are enclosed in <code>```{r}</code> and <code>```</code><br>
+                ✔ Inline R code uses <code>`r variable`</code> syntax</p>
             </div>
+        </div>
+        
+        <div class="solution-section">
+            <h2 id="sol-data">3️⃣ Solutions: Reading and Writing Data</h2>
             
-            <hr>
-            
-            <h3>Exercise 1.3: Perform Calculations</h3>
+            <h3>Solution 3.1: Install and Load Data Packages</h3>
             <div class="r-code">
                 <code>
-# Calculating fatalities and recovered cases<br>
-fatalities <- total_cases * (fatality_rate / 100)<br>
-recovered <- total_cases - fatalities<br>
-<br>
-# Displaying the results<br>
-fatalities<br>
-recovered
+# Install required packages for data handling<br>
+install.packages(c("readr", "readxl", "writexl"))<br><br>
+# Load packages<br>
+library(readr)    # For CSV files<br>
+library(readxl)   # For reading Excel files<br>
+library(writexl)  # For writing Excel files<br><br>
+# Verify packages are loaded<br>
+sessionInfo()
                 </code>
             </div>
             
             <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- The formula for fatalities is <code>total_cases * (fatality_rate / 100)</code>.<br>
-                - The formula for recovered cases is <code>total_cases - fatalities</code>.</p>
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>c("readr", "readxl", "writexl")</code> installs multiple packages at once<br>
+                ✔ Each <code>library()</code> call loads a specific package<br>
+                ✔ <code>sessionInfo()</code> shows all loaded packages and versions</p>
+            </div>
+            
+            <h3>Solution 3.2: Read a CSV File</h3>
+            <div class="r-code">
+                <code>
+# Load readr package<br>
+library(readr)<br><br>
+# Read CSV file into dataframe<br>
+malaria_df <- read_csv("malaria_data.csv")<br><br>
+# Display first 6 rows<br>
+head(malaria_df)<br><br>
+# Additional exploration<br>
+str(malaria_df)     # Structure of the dataset<br>
+summary(malaria_df) # Summary statistics<br>
+dim(malaria_df)     # Dimensions (rows x columns)
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>read_csv()</code> imports CSV files into R dataframes<br>
+                ✔ <code>head()</code> shows first few rows of data<br>
+                ✔ <code>str()</code> displays data structure and types<br>
+                ✔ <code>summary()</code> provides statistical summaries<br>
+                ✔ <code>dim()</code> returns number of rows and columns</p>
+            </div>
+            
+            <h3>Solution 3.3: Read an Excel File</h3>
+            <div class="r-code">
+                <code>
+# Load readxl package<br>
+library(readxl)<br><br>
+# Read Excel file (Sheet 1)<br>
+malaria_excel_df <- read_excel("malaria_data.xlsx", sheet = 1)<br><br>
+# Alternative: Specify sheet by name<br>
+# malaria_excel_df <- read_excel("malaria_data.xlsx", sheet = "Sheet1")<br><br>
+# Display first 6 rows<br>
+head(malaria_excel_df)<br><br>
+# Check available sheets<br>
+excel_sheets("malaria_data.xlsx")
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>read_excel()</code> imports Excel files (.xlsx, .xls)<br>
+                ✔ <code>sheet = 1</code> specifies the first worksheet<br>
+                ✔ Can also use sheet names: <code>sheet = "Sheet1"</code><br>
+                ✔ <code>excel_sheets()</code> lists all available worksheets</p>
+            </div>
+            
+            <h3>Solution 3.4: Write Data to CSV and Excel</h3>
+            <div class="r-code">
+                <code>
+# Save dataframe as CSV file<br>
+write_csv(malaria_df, "processed_malaria_data.csv")<br><br>
+# Save dataframe as Excel file<br>
+library(writexl)<br>
+write_xlsx(malaria_df, "processed_malaria_data.xlsx")<br><br>
+# Save multiple sheets to Excel<br>
+data_list <- list(<br>
+  "Raw_Data" = malaria_df,<br>
+  "Summary" = summary(malaria_df)<br>
+)<br>
+write_xlsx(data_list, "malaria_analysis_complete.xlsx")<br><br>
+# Verify files were created<br>
+file.exists("processed_malaria_data.csv")<br>
+file.exists("processed_malaria_data.xlsx")
+                </code>
+            </div>
+            
+            <div class="explanation">
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>write_csv()</code> saves dataframes as CSV files<br>
+                ✔ <code>write_xlsx()</code> saves dataframes as Excel files<br>
+                ✔ Can save multiple sheets using a named list<br>
+                ✔ <code>file.exists()</code> checks if files were successfully created</p>
             </div>
         </div>
         
         <div class="solution-section">
-            <h2 id="sol-markdown">2️⃣ Using R Markdown</h2>
-            
-            <h3>Exercise 2.1: Install and Load R Markdown</h3>
-            <div class="r-code">
-                <code>
-# Installing and loading the rmarkdown package<br>
-install.packages("rmarkdown")<br>
-library(rmarkdown)
-                </code>
-            </div>
-            
-            <hr>
-            
-            <h3>Exercise 2.2: Create an R Markdown File</h3>
-            
-            <p>1. Open RStudio and go to <strong>File → New File → R Markdown</strong>.<br>
-            2. Choose the output format (HTML, PDF, Word).<br>
-            3. Write the following example R Markdown document content:</p>
+            <h2 id="sol-bonus">4️⃣ Bonus Solution: Automated CSV Import Script</h2>
             
             <div class="r-code">
                 <code>
----<br>
-title: "Malaria Data Summary"<br>
-output: html_document<br>
----<br>
-<br>
-## Malaria Cases Summary<br>
-<br>
-The total malaria cases in the region are `r total_cases`.<br>
-The fatality rate is `r fatality_rate`.<br>
-The total fatalities are calculated as `r fatalities`.<br>
-                </code>
-            </div>
-            
-            <p>4. Click <strong>Knit</strong> to generate the HTML output.</p>
-        </div>
-        
-        <div class="solution-section">
-            <h2 id="sol-data">3️⃣ Reading and Writing Data (CSV, Excel)</h2>
-            
-            <h3>Exercise 3.1: Install and Load Data Packages</h3>
-            <div class="r-code">
-                <code>
-# Installing and loading the necessary packages<br>
-install.packages("readr")<br>
-install.packages("readxl")<br>
-<br>
+# Automated Malaria Data Analysis Script<br>
+# Load required libraries<br>
 library(readr)<br>
-library(readxl)
-                </code>
-            </div>
-            
-            <hr>
-            
-            <h3>Exercise 3.2: Read a CSV File</h3>
-            <div class="r-code">
-                <code>
-# Reading the CSV file into a dataframe<br>
-malaria_df <- read_csv("malaria_data.csv")<br>
-<br>
-# Displaying the first 6 rows of the dataframe<br>
-head(malaria_df)
+library(writexl)<br><br>
+# Function to analyze malaria data<br>
+analyze_malaria_data <- function() {<br>
+  <br>
+  # Ask user for file path<br>
+  cat("=== Malaria Data Analysis Tool ===\n")<br>
+  file_path <- readline(prompt = "Enter CSV file path: ")<br>
+  <br>
+  # Check if file exists<br>
+  if (!file.exists(file_path)) {<br>
+    cat("Error: File not found!\n")<br>
+    return(NULL)<br>
+  }<br>
+  <br>
+  # Load the dataset<br>
+  cat("Loading dataset...\n")<br>
+  tryCatch({<br>
+    malaria_data <- read_csv(file_path)<br>
+    cat("✓ Dataset loaded successfully!\n")<br>
+  }, error = function(e) {<br>
+    cat("Error loading file:", e$message, "\n")<br>
+    return(NULL)<br>
+  })<br>
+  <br>
+  # Display dataset information<br>
+  cat("\n=== Dataset Information ===\n")<br>
+  cat("Rows:", nrow(malaria_data), "\n")<br>
+  cat("Columns:", ncol(malaria_data), "\n")<br>
+  cat("Column names:", paste(colnames(malaria_data), collapse = ", "), "\n")<br>
+  <br>
+  # Display summary statistics<br>
+  cat("\n=== Summary Statistics ===\n")<br>
+  print(summary(malaria_data))<br>
+  <br>
+  # Basic data cleaning<br>
+  cat("\n=== Data Cleaning ===\n")<br>
+  # Remove rows with missing values<br>
+  original_rows <- nrow(malaria_data)<br>
+  malaria_data <- na.omit(malaria_data)<br>
+  cleaned_rows <- nrow(malaria_data)<br>
+  <br>
+  cat("Removed", original_rows - cleaned_rows, "rows with missing values\n")<br>
+  cat("Final dataset:", cleaned_rows, "rows\n")<br>
+  <br>
+  # Save cleaned data<br>
+  output_file <- paste0("cleaned_", basename(file_path))<br>
+  write_csv(malaria_data, output_file)<br>
+  cat("✓ Cleaned data saved as:", output_file, "\n")<br>
+  <br>
+  # Create Excel report<br>
+  report_data <- list(<br>
+    "Cleaned_Data" = malaria_data,<br>
+    "Summary" = data.frame(<br>
+      Metric = c("Total Rows", "Total Columns", "Missing Values Removed"),<br>
+      Value = c(cleaned_rows, ncol(malaria_data), original_rows - cleaned_rows)<br>
+    )<br>
+  )<br>
+  <br>
+  excel_file <- paste0("malaria_report_", Sys.Date(), ".xlsx")<br>
+  write_xlsx(report_data, excel_file)<br>
+  cat("✓ Excel report saved as:", excel_file, "\n")<br>
+  <br>
+  cat("\n=== Analysis Complete! ===\n")<br>
+  return(malaria_data)<br>
+}<br><br>
+# Run the analysis<br>
+# result <- analyze_malaria_data()
                 </code>
             </div>
             
             <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- <code>read_csv()</code> reads CSV files into a dataframe.<br>
-                - <code>head()</code> displays the first 6 rows of the dataframe.</p>
+                <h4>🔍 Explanation:</h4>
+                <p>✔ <code>readline()</code> prompts user for input<br>
+                ✔ <code>file.exists()</code> validates file path<br>
+                ✔ <code>tryCatch()</code> handles potential errors gracefully<br>
+                ✔ <code>na.omit()</code> removes rows with missing values<br>
+                ✔ <code>basename()</code> extracts filename from full path<br>
+                ✔ <code>Sys.Date()</code> adds current date to output filename<br>
+                ✔ Function returns cleaned data for further analysis</p>
             </div>
             
-            <hr>
-            
-            <h3>Exercise 3.3: Read an Excel File</h3>
+            <h3>💡 Advanced Version with Error Handling</h3>
             <div class="r-code">
                 <code>
-# Reading the Excel file into a dataframe<br>
-malaria_excel_df <- read_excel("malaria_data.xlsx", sheet = 1)<br>
-<br>
-# Displaying the first 6 rows of the dataframe<br>
-head(malaria_excel_df)
+# Enhanced version with better error handling<br>
+enhanced_malaria_analysis <- function(file_path = NULL) {<br>
+  <br>
+  # If no file path provided, ask user<br>
+  if (is.null(file_path)) {<br>
+    file_path <- file.choose()  # Opens file dialog<br>
+  }<br>
+  <br>
+  # Validate file extension<br>
+  if (!grepl("\\.csv$", file_path, ignore.case = TRUE)) {<br>
+    stop("Error: Please provide a CSV file (.csv extension)")<br>
+  }<br>
+  <br>
+  # Load and analyze data<br>
+  malaria_data <- read_csv(file_path, show_col_types = FALSE)<br>
+  <br>
+  # Generate comprehensive analysis<br>
+  analysis_results <- list(<br>
+    data = malaria_data,<br>
+    summary = summary(malaria_data),<br>
+    missing_values = sapply(malaria_data, function(x) sum(is.na(x))),<br>
+    data_types = sapply(malaria_data, class)<br>
+  )<br>
+  <br>
+  return(analysis_results)<br>
+}<br><br>
+# Example usage:<br>
+# results <- enhanced_malaria_analysis("malaria_data.csv")
                 </code>
             </div>
             
             <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- <code>read_excel()</code> reads Excel files into a dataframe.<br>
-                - <code>sheet = 1</code> specifies the sheet to read (sheet 1).</p>
-            </div>
-            
-            <hr>
-            
-            <h3>Exercise 3.4: Write Data to CSV and Excel</h3>
-            <div class="r-code">
-                <code>
-# Writing data to a CSV file<br>
-write_csv(malaria_df, "processed_malaria_data.csv")<br>
-<br>
-# Writing data to an Excel file<br>
-write.xlsx(malaria_df, "processed_malaria_data.xlsx")
-                </code>
-            </div>
-            
-            <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- <code>write_csv()</code> saves the dataframe as a CSV file.<br>
-                - <code>write.xlsx()</code> saves the dataframe as an Excel file.</p>
+                <h4>🔍 Advanced Features:</h4>
+                <p>✔ <code>file.choose()</code> opens a file selection dialog<br>
+                ✔ <code>grepl()</code> validates file extension using regex<br>
+                ✔ <code>show_col_types = FALSE</code> suppresses column type messages<br>
+                ✔ <code>sapply()</code> applies functions to each column<br>
+                ✔ Returns structured list with multiple analysis components</p>
             </div>
         </div>
         
-        <div class="solution-section">
-            <h2 id="sol-bonus">4️⃣ Bonus Challenge: Automate CSV Import</h2>
-            
-            <div class="r-code">
-                <code>
-# Asking the user for the file path<br>
-file_path <- readline(prompt = "Enter the path to the CSV file: ")<br>
-<br>
-# Reading the dataset from the provided path<br>
-malaria_data <- read_csv(file_path)<br>
-<br>
-# Displaying summary statistics<br>
-summary(malaria_data)<br>
-<br>
-# Saving the cleaned data to a new CSV file<br>
-write_csv(malaria_data, "cleaned_malaria_data.csv")
-                </code>
-            </div>
-            
-            <div class="explanation">
-                <h4>Explanation:</h4>
-                <p>- <code>readline()</code> is used to ask the user for input (file path).<br>
-                - <code>summary()</code> gives the summary statistics of the dataset.<br>
-                - <code>write_csv()</code> saves the dataframe as a CSV file.</p>
-            </div>
-            
-            <h3>💡 Additional Notes:</h3>
-            <p>- Make sure that the paths to the files are correct, and if you're reading from an Excel file, ensure that the <code>readxl</code> library is loaded.<br>
-            - If you get errors when trying to install packages, make sure you have an active internet connection, and the R version is up-to-date.</p>
-        </div>
+        <hr>
+        
+        <h2>🎉 Congratulations!</h2>
+        <p>You have completed Week 1 of the Malaria Data Analysis Course! You now have the foundational skills to:</p>
+        
+        <ul>
+            <li>✅ Set up and navigate R and RStudio</li>
+            <li>✅ Work with variables and basic R syntax</li>
+            <li>✅ Create professional documents with R Markdown</li>
+            <li>✅ Import and export data from CSV and Excel files</li>
+            <li>✅ Perform basic data cleaning and analysis</li>
+        </ul>
+        
+        <h3>🚀 Ready for Week 2?</h3>
+        <p>Next week we'll dive deeper into:</p>
+        <ul>
+            <li>📊 Data manipulation with <code>dplyr</code></li>
+            <li>🧹 Advanced data cleaning techniques</li>
+            <li>📈 Creating visualizations with <code>ggplot2</code></li>
+            <li>📋 Exploratory data analysis for malaria datasets</li>
+        </ul>
+        
+        <p><strong>Keep practicing these Week 1 concepts – they form the foundation for everything we'll learn next!</strong></p>
     </div>
-    
-    <script src="script.js"></script>
+
+    <script>
+        // Sidebar toggle functionality
+        document.getElementById('sidebar-toggle').addEventListener('click', function() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('active');
+            
+            // Adjust container margin when sidebar is open
+            const container = document.querySelector('.container');
+            if (sidebar.classList.contains('active')) {
+                container.style.marginRight = '320px';
+            } else {
+                container.style.marginRight = '0';
+            }
+        });
+
+        // Menu item toggle functionality
+        document.querySelectorAll('.sidebar .menu-item > a').forEach(item => {
+            item.addEventListener('click', function(e) {
+                e.preventDefault();
+                const menuItem = this.parentElement;
+                menuItem.classList.toggle('active');
+            });
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('.sidebar a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(e) {
+            const sidebar = document.getElementById('sidebar');
+            const toggle = document.getElementById('sidebar-toggle');
+            
+            if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
+                sidebar.classList.remove('active');
+                document.querySelector('.container').style.marginRight = '0';
+            }
+        });
+    </script>
 </body>
 </html>
